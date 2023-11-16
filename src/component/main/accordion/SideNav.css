@@ -1,0 +1,11 @@
+.side-nav-container {
+    padding-right: 5%;
+  border-right: 1px solid rgb(220, 220, 220);
+}
+.accordion-body li {
+  list-style-type: none;
+  cursor: pointer;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  padding-bottom: 2%;
+}

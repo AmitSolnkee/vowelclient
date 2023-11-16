@@ -1,0 +1,37 @@
+.login-box {
+  max-width: 30%;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 5px;
+}
+.login-box input {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.send-otp {
+  cursor: pointer;
+}
+.otp-coantiner {
+  button {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 2%;
+    &:hover {
+      box-shadow: inset 1px 3px 5px gray;
+    }
+  }
+}
