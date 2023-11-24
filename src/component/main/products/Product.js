@@ -31,7 +31,7 @@ const Product = () => {
     }
 
     setisLoading(true);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const response = await axios.post(
       "http://localhost:5001/addtocart",
       {
@@ -42,11 +42,12 @@ const Product = () => {
       },
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
     );
+    alert("Product added");
     setisLoading(false);
   };
 

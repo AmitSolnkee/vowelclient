@@ -61,16 +61,20 @@ const Register = () => {
         return;
       }
 
-      resetValidateState(); 
+      resetValidateState();
 
       //  Post req sent for registering user in database
       await axios
         .post("http://localhost:5001/registeruser", {
           fullname,
-          emailid,
+          emailid, 
           password,
         })
-        .then((response) => console.log("user registration", response));
+        .then((response) => {
+          console.log("user registration", response);
+          alert("User registered");
+          navigate('/')
+        });
     } catch (error) {
       console.error("Error while registering user", error);
     } finally {

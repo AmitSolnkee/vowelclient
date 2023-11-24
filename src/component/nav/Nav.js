@@ -5,12 +5,13 @@ import "./nav.css";
 const Nav = () => {
   const navigate = useNavigate();
   const [cartItem, setCartItems] = useState([]);
-  const [apiCalled, setApiCalled] = useState(false);
-  
+
+  const [cartQty, setCartQty] = useState(0);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (token && !apiCalled) {
+    if (token) {
       axios
         .get("http://localhost:5001/getcart", {
           headers: {
@@ -20,10 +21,11 @@ const Nav = () => {
         })
         .then((res) => {
           setCartItems(res.data);
-          setApiCalled(true);
+          setCartQty(res.data.length);
         });
     }
-  }, [apiCalled]);
+  }, []);
+
   return (
     <div className="nav-container ">
       <div className="nav-top p-2 text-center bg-dark text-white">
@@ -31,7 +33,12 @@ const Nav = () => {
       </div>
       <div className="nav-bar p-3">
         <div className="row align-items-center justify-content-between">
-          <div className="col-3 col-md-3 fs-5 fs-lg-3" onClick={()=>navigate('/')}>Ecom</div>
+          <div
+            className="col-3 col-md-3 fs-5 fs-lg-3"
+            onClick={() => navigate("/")}
+          >
+            Ecom
+          </div>
           <div className="col-7 col-md-6 px-0 py-2 search-inp-container d-flex ">
             <input className="p-2" type="text" placeholder="Search ..." />
             <div className="p-2">
@@ -46,16 +53,17 @@ const Nav = () => {
               Account
             </div>
             <div className="ms-lg-5 mr-2 position-relative">
-              <i className="fa-solid fa-lg fa-cart-shopping" onClick={()=>navigate('/cart')} ></i>
+              <i
+                className="fa-solid fa-lg fa-cart-shopping"
+                onClick={() => navigate("/cart")}
+              ></i>
               <div
                 className="cart-item"
                 style={
-                  cartItem.length > 0
-                    ? { display: "inline" }
-                    : { display: "none" }
+                  cartQty > 0 ? { display: "inline" } : { display: "none" }
                 }
               >
-                {cartItem.length ? cartItem.length : <></>}
+                {cartQty > 0 ? cartQty : null}
               </div>
             </div>
             <div>
@@ -66,11 +74,6 @@ const Nav = () => {
             <div className="">
               <i className="fa-solid fa-bars fa-2x fa-beat"></i>
             </div>
-
-            <div className="dropdown-menu text-center">
-              <div className="dropdown-item">Account</div>
-              <div className="dropdown-item">Cart</div>
-            </div>
           </div>
         </div>
       </div>
@@ -80,7 +83,6 @@ const Nav = () => {
       <div className="jumbotron-container text-center  text-white position-relative">
         <div className="jumbotron-wrap mb-5">
           <h1>Welcome to Ecommerce</h1>
-          {/* <h3>India's Largest Book selling platform</h3> */}
           <h5>Your One-Stop Destination for the Best Products!</h5>
           <h5>
             Discover a world of knowledge and adventure with our extensive

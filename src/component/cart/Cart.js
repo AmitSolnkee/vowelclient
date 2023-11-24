@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import "./Cart.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import PayPalButton from "../paypal/PaypalButton";
 const Cart = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setisLoading] = useState(false);
 
-  const addQty = async (productData)=>{
+  const addQty = async (productData) => {
     if (isLoading) {
       return;
     }
 
     setisLoading(true);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const response = await axios.post(
       "http://localhost:5001/addtocart",
       {
@@ -22,13 +23,62 @@ const Cart = () => {
       },
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
     );
     setisLoading(false);
-  }
+  };
+  // deletefromcart
+  const deleteFromCart = async (product) => {
+    if (isLoading) {
+      return;
+    }
+
+    setisLoading(true);
+    const { product_id } = product;
+    const token = localStorage.getItem("token");
+    axios
+      .delete(`http://localhost:5001/deletefromcart`, {
+        data: { product_id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        alert(res.data.message);
+        setisLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error deleting address:", error);
+      });
+  };
+
+  const handlePaymentSuccess = () => {};
+
+  const removeFromCart = async (productData) => {
+    if (isLoading) {
+      return;
+    }
+    setisLoading(true);
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      "http://localhost:5001/removefromcart",
+      {
+        product_id: productData?.product_id,
+        price: productData?.price,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    setisLoading(false);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -91,10 +141,21 @@ const Cart = () => {
                 className="text-center align-middle d-flex justify-content-center"
               >
                 <div className="d-flex me-5">
-                  <i className="me-3 fas fa-plus" onClick={()=>addQty(item)}></i>
-                  <i className="fas fa-minus"></i>
+                  <i
+                    className="me-3 fas fa-plus"
+                    onClick={() => addQty(item)}
+                  ></i>
+                  <i
+                    className="fas fa-minus"
+                    onClick={() => removeFromCart(item)}
+                  ></i>
                 </div>
-                <i className="fas fa-trash"></i>
+                <i
+                  className="fas fa-trash"
+                  onClick={() => {
+                    deleteFromCart(item);
+                  }}
+                ></i>
               </td>
             </tr>
           ))}
@@ -125,14 +186,25 @@ const Cart = () => {
                 button to confirm your purchase.
               </p>
             </div>
-            <button
+            {/* <button
               className="btn btn-success mt-3 w-50"
               onClick={() => {
                 navigate("/address");
               }}
             >
               Place Order
-            </button>
+            </button> */}
+            <PayPalButton
+              amount={cartItems
+                .reduce((acc, item) => {
+                  if (item?.price) {
+                    return acc + item.price * item.qty;
+                  }
+                  return acc;
+                }, 0)
+                .toFixed(2)}
+              onSuccess={handlePaymentSuccess}
+            />
           </>
         )}
       </div>
